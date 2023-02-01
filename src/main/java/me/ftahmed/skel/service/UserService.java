@@ -1,6 +1,6 @@
-package com.example.demo.service;
+package me.ftahmed.skel.service;
 
-import com.example.demo.model.User;
+import me.ftahmed.skel.model.User;
 
 import java.util.List;
 

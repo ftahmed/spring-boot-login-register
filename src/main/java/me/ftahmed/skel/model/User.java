@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package me.ftahmed.skel.model;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -7,9 +7,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
@@ -49,7 +49,7 @@ public class User implements UserDetails  {
     private String password;
 
     @Column(name = "mobile", unique = true)
-    @Length(min = 10, message = "Password should be atleast 10 number long")
+    @Length(min = 10, message = "Mobile should be atleast 10 numbers long")
     private String mobile;
 
     @CreationTimestamp
@@ -111,7 +111,7 @@ public class User implements UserDetails  {
 
     public Role getRole() { return role; }
 
-    public void setRole(com.example.demo.model.Role role) {
+    public void setRole(me.ftahmed.skel.model.Role role) {
         this.role = role;
     }
 

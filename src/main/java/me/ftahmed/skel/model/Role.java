@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package me.ftahmed.skel.model;
 
 public enum Role {
     USER("User"),

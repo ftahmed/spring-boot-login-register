@@ -1,6 +1,6 @@
-package com.example.demo.repository;
+package me.ftahmed.skel.repository;
 
-import com.example.demo.model.User;
+import me.ftahmed.skel.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
-package com.example.demo.service;
+package me.ftahmed.skel.service;
 
-import com.example.demo.model.User;
-import com.example.demo.repository.UserRepository;
+import me.ftahmed.skel.model.User;
+import me.ftahmed.skel.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
