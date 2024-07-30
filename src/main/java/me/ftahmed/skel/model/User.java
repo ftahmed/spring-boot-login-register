@@ -11,23 +11,19 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Entity
 @Table(name = "users")
 public class User implements UserDetails  {
-    @SequenceGenerator(
-            name = "users_sequence",
-            sequenceName = "users_sequence",
-            allocationSize = 1
-    )
+
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "users_sequence"
-    )
+    @Column(nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull(message = "First Name cannot be empty")
@@ -60,8 +56,9 @@ public class User implements UserDetails  {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private List<Role> roles;
 
     @Column(name = "locked")
     private Boolean locked = false;
@@ -71,17 +68,21 @@ public class User implements UserDetails  {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
-        return Collections.singletonList(authority);
+    	List<GrantedAuthority> authorities = new ArrayList<>();
+    	for (Role role: this.roles) {
+    		authorities.add(new SimpleGrantedAuthority(role.getName()));
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+    		authorities.addAll(role.getPrivileges()
+    				.stream()
+    				.map(p -> new SimpleGrantedAuthority(p.getName()))
+    				.collect(Collectors.toList()));
+    	}
+        return authorities;
     }
 
     @Override
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password){
-        this.password = password;
     }
 
     @Override
@@ -109,25 +110,105 @@ public class User implements UserDetails  {
         return enabled;
     }
 
-    public Role getRole() { return role; }
-
-    public void setRole(me.ftahmed.skel.model.Role role) {
-        this.role = role;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        return id != null &&
+                id.equals(user.id);
     }
 
-    public String getEmail() { return email; }
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 
-    public void setEmail(String email) { this.email = email; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getFirstName() { return firstName; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public String getFirstName() {
+        return firstName;
+    }
 
-    public String getMobile() { return mobile; }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-    public void setMobile(String mobile) { this.mobile = mobile; }
+    public String getLastName() {
+        return lastName;
+    }
 
-    public String getLastName() { return lastName; }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-    public void setLastName(String lastName) { this.lastName = lastName; }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
 }

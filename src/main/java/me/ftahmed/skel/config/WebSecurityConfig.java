@@ -21,7 +21,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    @Value("${securityDebug:true}")
+    @Value("${securityDebug:false}")
     private Boolean securityDebug;
 
     @Autowired

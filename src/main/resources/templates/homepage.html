@@ -5,10 +5,15 @@
 </head>
 <body>
   <h2>Welcome to Homepage</h2>
-  <p sec:authorize="hasRole('ROLE_ANONYMOUS')">Text visible to anonymous.</p>
-  <p sec:authorize="hasRole('USER')">Text visible to user.</p>
-  <p sec:authorize="hasRole('ADMIN')">Text visible to admin.</p>
-  <p sec:authorize="isAuthenticated()">Text visible only to authenticated users.</p>
+  <p sec:authorize="hasRole('ROLE_ANONYMOUS')">hasRole('ROLE_ANONYMOUS'): Text visible to anonymous.</p>
+  <p sec:authorize="hasRole('ANONYMOUS')">hasRole('ANONYMOUS'): Text visible to anonymous.</p>
+  <p sec:authorize="hasAuthority('USER')">hasAuthority('USER'): Text visible to user.</p>
+  <p sec:authorize="hasAuthority('ADMIN')">hasAuthority('ADMIN'): Text visible to admin.</p>
+  <p sec:authorize="hasRole('ROLE_USER')">hasRole('ROLE_USER'): Text visible to user.</p>
+  <p sec:authorize="hasRole('ROLE_ADMIN')">hasRole('ROLE_ADMIN'): Text visible to admin.</p>
+  <p sec:authorize="hasRole('USER')">hasRole('USER'): Text visible to user.</p>
+  <p sec:authorize="hasRole('ADMIN')">hasRole('ADMIN'): Text visible to admin.</p>
+  <p sec:authorize="isAuthenticated()">isAuthenticated(): Text visible only to authenticated users.</p>
 
   <div sec:authorize="hasRole('ROLE_ANONYMOUS')">
     <p><a th:href="@{|/login|}" th:text="'Log in'"></a></p>
@@ -17,7 +22,7 @@
 
   <div sec:authorize="isAuthenticated()">
     <p>Logged as: <span sec:authentication="name"></span></p>
-    <p>Has role: <span sec:authentication="authorities"></span></p>
+    <p>Has authorities: <span sec:authentication="authorities"></span></p>
     <p sec:authorize="hasAuthority('USER')"><a th:href="@{|/dashboard|}" th:text="'User Dashboard'"></a></p>
     <p sec:authorize="hasAuthority('ADMIN')"><a th:href="@{|/admin/dashboard|}" th:text="'Admin Dashboard'"></a></p>
     <a th:href="@{/logout}">Log out</a>

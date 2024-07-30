@@ -5,26 +5,22 @@ import java.util.Collection;
 import jakarta.persistence.*;
 
 @Entity
-public class Role {
+public class Privilege {
 
     @Id
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany(mappedBy = "roles")
-    private Collection<User> users;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "roles_privileges", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
-    private Collection<Privilege> privileges;
-
     private String name;
 
-    public Role() {
+    @ManyToMany(mappedBy = "privileges")
+    private Collection<Role> roles;
+
+    public Privilege() {
     }
 
-    public Role(String name) {
+    public Privilege(String name) {
         this.name = name;
     }
 
@@ -44,27 +40,19 @@ public class Role {
         this.name = name;
     }
 
-    public Collection<User> getUsers() {
-        return users;
+    public Collection<Role> getRoles() {
+        return roles;
     }
 
-    public void setUsers(Collection<User> users) {
-        this.users = users;
-    }
-
-    public Collection<Privilege> getPrivileges() {
-        return privileges;
-    }
-
-    public void setPrivileges(Collection<Privilege> privileges) {
-        this.privileges = privileges;
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
     public String toString() {
         return this.name;
     }
- 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -73,9 +61,12 @@ public class Role {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Role user = (Role) o;
-        return id != null &&
-                id.equals(user.id);
+        Privilege privilege = (Privilege) o;
+        if (id != null && id.equals(privilege.id) &&
+                name != null && name.equals(privilege.name)) {
+            return true;
+        }
+        return false;
     }
 
     @Override

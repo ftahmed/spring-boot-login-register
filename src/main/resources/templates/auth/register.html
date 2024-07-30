@@ -11,11 +11,32 @@
     <input type="text" th:field="*{mobile}" placeholder="Mobile Number" /> <br/><br/>
     <input type="text" th:field="*{email}" placeholder="Email" /> <br/><br/>
     <input type="password" th:field="*{password}" placeholder="Password" /> <br/><br/>
-    <select th:field="*{role}" required>
-      <option value="">Select</option>
-      <option value="ADMIN">ADMIN</option>
-      <option value="USER">USER</option>
-    </select> <br/><br/>
+    <!-- Role <select th:field="*{role}">
+      <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.name}" />
+    </select><br/><br/> -->
+    Roles
+    <th:block th:each="role : ${allRoles}">
+      <input type="checkbox" th:field="*{roles}" th:value="${role.id}" />
+      <label th:for="${#ids.prev('roles')}" th:text="${role.name}" />
+    </th:block>
+
+    <!-- https://www.baeldung.com/thymeleaf-list -->
+    <!-- https://www.codejava.net/frameworks/spring-boot/spring-thymeleaf-form-multi-checkboxes-mapping-with-collection-example -->
+    
+    <!-- <select multiple size="4" th:field="*{roles}" required>
+      <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.name}" />
+    </select> -->
+
+    <!-- <ul>
+      <li th:each="role : ${allRoles}">
+          <div>
+              <input type="checkbox" th:field="*{roles}" th:value="${role.id}">
+              <label th:for="${#ids.prev('roles')}" th:text="${role.name}"></label>
+          </div>
+      </li>
+    </ul> -->
+
+    <br/><br/>
     <button type="submit">Register</button> | <a th:href="@{|/login|}" th:text="'Log in'"></a>
     <span th:utext="${successMessage}"></span>
     <div th:if="${bindingResult!=null && bindingResult.getAllErrors()!=null}">
