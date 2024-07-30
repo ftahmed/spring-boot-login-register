@@ -13,7 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import jakarta.validation.Valid;
+
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.Period;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.TimeZone;
 
 @Controller
 public class AuthController {
@@ -55,6 +61,11 @@ public class AuthController {
             model.addAttribute("successMessage", userPresentObj.get(1));
             return "auth/register";
         }
+
+        user.setOffsetTimeColumn(OffsetTime.now());  // FIXME
+        user.setOffsetDateTimeColumn(OffsetDateTime.now());
+        user.setZonedDateTimeColumn(ZonedDateTime.now(TimeZone.getTimeZone("Europe/London").toZoneId()));
+        user.setSpan(Period.of(1, 2, 3));
 
         userService.saveUser(user);
         model.addAttribute("successMessage", "User registered successfully!");

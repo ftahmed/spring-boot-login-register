@@ -1,6 +1,9 @@
 package me.ftahmed.skel.model;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.TimeZoneColumn;
+import org.hibernate.annotations.TimeZoneStorage;
+import org.hibernate.annotations.TimeZoneStorageType;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,7 +13,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import me.ftahmed.skel.repository.PeriodStringConverter;
+
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.Period;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -211,4 +220,56 @@ public class User implements UserDetails  {
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
+
+    @TimeZoneStorage(TimeZoneStorageType.COLUMN)
+    @TimeZoneColumn(name = "birthtime_offset_offset")
+    @Column(name = "birthtime_offset")
+    private OffsetTime offsetTimeColumn;
+
+    @TimeZoneStorage(TimeZoneStorageType.COLUMN)
+    @TimeZoneColumn(name = "birthday_offset_offset")
+    @Column(name = "birthday_offset")
+    private OffsetDateTime offsetDateTimeColumn;
+
+    @TimeZoneStorage(TimeZoneStorageType.COLUMN)
+    @TimeZoneColumn(name = "birthday_zoned_offset")
+    @Column(name = "birthday_zoned")
+    private ZonedDateTime zonedDateTimeColumn;
+    
+    @Convert(converter = PeriodStringConverter.class)
+    @Column(columnDefinition = "")
+    private Period span;
+
+    public OffsetTime getOffsetTimeColumn() {
+        return offsetTimeColumn;
+    }
+
+    public void setOffsetTimeColumn(OffsetTime offsetTimeColumn) {
+        this.offsetTimeColumn = offsetTimeColumn;
+    }
+
+    public OffsetDateTime getOffsetDateTimeColumn() {
+        return offsetDateTimeColumn;
+    }
+
+    public void setOffsetDateTimeColumn(OffsetDateTime offsetDateTimeColumn) {
+        this.offsetDateTimeColumn = offsetDateTimeColumn;
+    }
+
+    public ZonedDateTime getZonedDateTimeColumn() {
+        return zonedDateTimeColumn;
+    }
+
+    public void setZonedDateTimeColumn(ZonedDateTime zonedDateTimeColumn) {
+        this.zonedDateTimeColumn = zonedDateTimeColumn;
+    }
+
+    public Period getSpan() {
+        return span;
+    }
+
+    public void setSpan(Period span) {
+        this.span = span;
+    }
+
 }
