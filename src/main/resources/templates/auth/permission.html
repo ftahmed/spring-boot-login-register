@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Login</title>
+</head>
+<body>
+  <form th:action="@{/permission}" th:object="${role}" method="post">
+    <h3>Permission</h3>
+    <input type="text" th:field="*{name}" placeholder="Role Name" /> <br/><br/>
+    Privileges
+    <th:block th:each="privilege : ${allPrivileges}">
+        <ul>
+            <li>
+                <input type="checkbox" th:field="*{privileges}" th:value="${privilege.id}" />
+                <label th:for="${#ids.prev('privileges')}" th:text="${privilege.name}" />
+            </li>
+        </ul>
+    </th:block>
+    <th:block th:each="privilege, stat : *{privileges}">
+        <ul>
+            <li>
+                <!-- <input th:field="*{privileges[__${stat.index}__].name}" /> -->
+
+                <input hidden th:name="|privileges[${stat.index}].id|" th:value="${'0'}"/>
+                <input th:name="|privileges[${stat.index}].name|" th:value="${privilege.name}" />
+            </li>
+        </ul>
+    </th:block>
+    <br/><br/>
+    <button type="submit">Submit</button> | <a th:href="@{|/login|}" th:text="'Log in'"></a> | <a th:href="@{|/register|}" th:text="'Register'"></a>
+    <span th:utext="${successMessage}"></span>
+    <div th:if="${bindingResult!=null && bindingResult.getAllErrors()!=null}">
+      <ul th:each="data : ${bindingResult.getAllErrors()}">
+        <li th:text="${data.getObjectName() + ' :: ' + data.getDefaultMessage()}"></li>
+      </ul>
+    </div>
+</form>
+</body>
+</html>

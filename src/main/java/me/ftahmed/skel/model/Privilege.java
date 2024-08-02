@@ -62,8 +62,7 @@ public class Privilege {
             return false;
         }
         Privilege privilege = (Privilege) o;
-        if (id != null && id.equals(privilege.id) &&
-                name != null && name.equals(privilege.name)) {
+        if (name != null && name.equals(privilege.name)) {
             return true;
         }
         return false;

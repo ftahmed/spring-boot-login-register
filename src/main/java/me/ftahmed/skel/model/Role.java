@@ -73,9 +73,9 @@ public class Role {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Role user = (Role) o;
-        return id != null &&
-                id.equals(user.id);
+        Role role = (Role) o;
+        return name != null &&
+                name.equals(role.name);
     }
 
     @Override
