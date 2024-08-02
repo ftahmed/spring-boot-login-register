@@ -4,6 +4,7 @@ import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.Period;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -14,7 +15,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import me.ftahmed.skel.model.Privilege;
 import me.ftahmed.skel.model.Role;
@@ -84,6 +87,9 @@ public class AuthController {
 
     @GetMapping("/permission")
     public String permission(Model model){
+        // var role = new Role("NEW_ROLE"); // FIXME
+        // role.setPrivileges(List.of(new Privilege("NEW_PRIVILEGE_1"), new Privilege("NEW_PRIVILEGE_2")));
+        // model.addAttribute("role", role);
         return "auth/permission";
     }
 
@@ -93,6 +99,9 @@ public class AuthController {
         role.setPrivileges(List.of(new Privilege("NEW_PRIVILEGE_1"), new Privilege("NEW_PRIVILEGE_2")));
         return role;
     }
+
+    private static final String AJAX_HEADER_NAME = "X-Requested-With";
+    private static final String AJAX_HEADER_VALUE = "XMLHttpRequest";
 
     @PostMapping("/permission")
     public String rolePermission(Model model, @ModelAttribute("role") @Valid Role role, BindingResult bindingResult){
@@ -113,4 +122,30 @@ public class AuthController {
         return "auth/permission";
     }
 
+    /*
+    function ajaxListener() {
+        console.log(this.responseText);
+    }
+    
+    const ajax = new XMLHttpRequest();
+    ajax.addEventListener("load", ajaxListener);
+    ajax.open("GET", "http://localhost:8080/permission?add");
+    ajax.send();
+    */
+
+    @RequestMapping(params = "add", path = "/permission")
+    public String addPrivilege(@ModelAttribute("role") @Valid Role role, HttpServletRequest request) {
+        var privs = new ArrayList<Privilege>();
+        privs.addAll(role.getPrivileges());
+        privs.add(new Privilege());
+        role.setPrivileges(privs);
+
+        if (AJAX_HEADER_VALUE.equals(request.getHeader(AJAX_HEADER_NAME))) {
+            // It is an Ajax request, render only #items fragment of the page.
+            return "auth/permission::#privileges";
+        } else {
+            // It is a standard HTTP request, render whole page.
+            return "auth/permission";
+        }
+    }
 }

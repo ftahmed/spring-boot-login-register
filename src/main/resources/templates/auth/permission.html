@@ -8,24 +8,31 @@
     <h3>Permission</h3>
     <input type="text" th:field="*{name}" placeholder="Role Name" /> <br/><br/>
     Privileges
-    <th:block th:each="privilege : ${allPrivileges}">
+
+    <!-- <th:block th:each="privilege : ${allPrivileges}">
         <ul>
             <li>
                 <input type="checkbox" th:field="*{privileges}" th:value="${privilege.id}" />
                 <label th:for="${#ids.prev('privileges')}" th:text="${privilege.name}" />
             </li>
         </ul>
-    </th:block>
-    <th:block th:each="privilege, stat : *{privileges}">
-        <ul>
-            <li>
-                <!-- <input th:field="*{privileges[__${stat.index}__].name}" /> -->
+    </th:block> -->
 
-                <input hidden th:name="|privileges[${stat.index}].id|" th:value="${'0'}"/>
+    <ul id="privileges"  th:fragment="privileges">
+      <th:block th:each="privilege, stat : *{privileges}">
+            <li>
+                <input hidden th:name="|privileges[${stat.index}].id|" th:value="${privilege.id}"/>
                 <input th:name="|privileges[${stat.index}].name|" th:value="${privilege.name}" />
+                <br/><br/>
             </li>
-        </ul>
-    </th:block>
+      </th:block>
+      <li>
+        <input hidden th:name="|privileges[${#lists.size(role.privileges)}].id|" th:value="${''}"/>
+        <input th:name="|privileges[${#lists.size(role.privileges)}].name|" th:value="${'NEW_PRIVILEGE_'+(#lists.size(role.privileges)+1)}" />
+        <br/><br/>
+      </li>
+  </ul>
+
     <br/><br/>
     <button type="submit">Submit</button> | <a th:href="@{|/login|}" th:text="'Log in'"></a> | <a th:href="@{|/register|}" th:text="'Register'"></a>
     <span th:utext="${successMessage}"></span>
